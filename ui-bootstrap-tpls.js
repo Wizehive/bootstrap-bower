@@ -1748,6 +1748,7 @@ angular.module('ui.bootstrap.dropdown', [])
 
 .directive('dropdown', function() {
   return {
+    restrict: 'CA',
     controller: 'DropdownController',
     link: function(scope, element, attrs, dropdownCtrl) {
       dropdownCtrl.init( element );
@@ -1757,6 +1758,7 @@ angular.module('ui.bootstrap.dropdown', [])
 
 .directive('dropdownToggle', function() {
   return {
+    restrict: 'CA',
     require: '?^dropdown',
     link: function(scope, element, attrs, dropdownCtrl) {
       if ( !dropdownCtrl ) {
