@@ -1524,7 +1524,6 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
 
         if ( closeOnDateSelection ) {
           scope.isOpen = false;
-          element[0].focus();
         }
       };
 
@@ -1591,7 +1590,6 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
 
       scope.close = function() {
         scope.isOpen = false;
-        element[0].focus();
       };
 
       var $popup = $compile(popupEl)(scope);
