@@ -1555,8 +1555,29 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
 
       scope.$watch('isOpen', function(value) {
         if (value) {
-          scope.position = appendToBody ? $position.offset(element) : $position.position(element);
-          scope.position.top = scope.position.top + element.prop('offsetHeight');
+
+          var elementOffset = $position.offset(element), // position of element relative to the document
+              elementHeight = element.prop('offsetHeight'),
+              viewportHeight = $document.height(),
+              popupHeight = $popup.find('ul').outerHeight();
+
+          scope.position = appendToBody ? elementOffset : $position.position(element);
+
+          var popupOffset = elementHeight;
+
+          var fitsAbove = (elementHeight + popupHeight) < elementOffset.top,
+              fitsBelow = (elementOffset.top + elementHeight + popupHeight) < viewportHeight;
+
+          // if popup doesnt fit below element, position it above
+          if (!fitsBelow && fitsAbove) {
+              scope.position.above = true;
+              var arrowHeight = $popup.find('.arrow').outerHeight();
+              scope.position.arrowTop = scope.position.top - arrowHeight;
+              scope.position.arrowLeft = $popup.find('ul').width()/2;
+              popupOffset = -popupHeight - arrowHeight - 1;
+          }
+
+          scope.position.top = scope.position.top + popupOffset;
 
           $document.bind('click', documentClickBind);
         } else {

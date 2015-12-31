@@ -1556,8 +1556,29 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
 
       scope.$watch('isOpen', function(value) {
         if (value) {
-          scope.position = appendToBody ? $position.offset(element) : $position.position(element);
-          scope.position.top = scope.position.top + element.prop('offsetHeight');
+
+          var elementOffset = $position.offset(element), // position of element relative to the document
+              elementHeight = element.prop('offsetHeight'),
+              viewportHeight = $document.height(),
+              popupHeight = $popup.find('ul').outerHeight();
+
+          scope.position = appendToBody ? elementOffset : $position.position(element);
+
+          var popupOffset = elementHeight;
+
+          var fitsAbove = (elementHeight + popupHeight) < elementOffset.top,
+              fitsBelow = (elementOffset.top + elementHeight + popupHeight) < viewportHeight;
+
+          // if popup doesnt fit below element, position it above
+          if (!fitsBelow && fitsAbove) {
+              scope.position.above = true;
+              var arrowHeight = $popup.find('.arrow').outerHeight();
+              scope.position.arrowTop = scope.position.top - arrowHeight;
+              scope.position.arrowLeft = $popup.find('ul').width()/2;
+              popupOffset = -popupHeight - arrowHeight - 1;
+          }
+
+          scope.position.top = scope.position.top + popupOffset;
 
           $document.bind('click', documentClickBind);
         } else {
@@ -4005,16 +4026,19 @@ angular.module("template/datepicker/month.html", []).run(["$templateCache", func
 
 angular.module("template/datepicker/popup.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/datepicker/popup.html",
-    "<ul class=\"dropdown-menu\" ng-style=\"{display: (isOpen && 'block') || 'none', top: position.top+'px', left: position.left+'px'}\" ng-keydown=\"keydown($event)\">\n" +
-    "	<li ng-transclude></li>\n" +
-    "	<li ng-if=\"showButtonBar\" style=\"padding:10px 9px 2px\">\n" +
-    "		<span class=\"btn-group pull-left\">\n" +
-    "			<button type=\"button\" class=\"btn btn-sm btn-primary\" tabindex=\"-1\" ng-click=\"select('today')\">{{ getText('current') }}</button>\n" +
-    "			<button type=\"button\" class=\"btn btn-sm btn-danger\" tabindex=\"-1\" ng-click=\"select(null)\">{{ getText('clear') }}</button>\n" +
-    "		</span>\n" +
-    "		<button type=\"button\" class=\"btn btn-sm btn-success pull-right\" tabindex=\"-1\" ng-click=\"close()\">{{ getText('close') }}</button>\n" +
-    "	</li>\n" +
-    "</ul>\n" +
+    "<div class=\"top\">\n" +
+    "	<div class=\"arrow\" ng-style=\"{display: (isOpen && position.above && 'block') || 'none', top: position.arrowTop+'px', left: position.arrowLeft+'px'}\" ng-keydown=\"keydown($event)\"/>" +
+    "	<ul class=\"dropdown-menu\" ng-style=\"{display: (isOpen && 'block') || 'none', top: position.top+'px', left: position.left+'px'}\" ng-keydown=\"keydown($event)\">\n" +
+    "		<li ng-transclude></li>\n" +
+    "		<li ng-if=\"showButtonBar\" style=\"padding:10px 9px 2px\">\n" +
+    "			<span class=\"btn-group pull-left\">\n" +
+    "				<button type=\"button\" class=\"btn btn-sm btn-primary\" tabindex=\"-1\" ng-click=\"select('today')\">{{ getText('current') }}</button>\n" +
+    "				<button type=\"button\" class=\"btn btn-sm btn-danger\" tabindex=\"-1\" ng-click=\"select(null)\">{{ getText('clear') }}</button>\n" +
+    "			</span>\n" +
+    "			<button type=\"button\" class=\"btn btn-sm btn-success pull-right\" tabindex=\"-1\" ng-click=\"close()\">{{ getText('close') }}</button>\n" +
+    "		</li>\n" +
+    "	</ul>\n" +
+    "</div>\n" +
     "");
 }]);
 
