@@ -3555,7 +3555,10 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
       //SUPPORTED ATTRIBUTES (OPTIONS)
 
       //minimal no of characters that needs to be entered before typeahead kicks-in
-      var minSearch = originalScope.$eval(attrs.typeaheadMinLength) || 1;
+      var minSearch = originalScope.$eval(attrs.typeaheadMinLength);
+      if (!minSearch && minSearch !== 0) {
+        minSearch = 1;
+      }
 
       //minimal wait time after last character typed before typehead kicks-in
       var waitTime = originalScope.$eval(attrs.typeaheadWaitMs) || 0;
@@ -3818,6 +3821,15 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
 
       element.bind('blur', function (evt) {
         hasFocus = false;
+      });
+
+      element.bind('focus', function (evt) {
+        hasFocus = true;
+        if (minSearch === 0 && !modelCtrl.$viewValue) {
+          $timeout(function() {
+            getMatchesAsync(modelCtrl.$viewValue, evt);
+          }, 0);
+        }
       });
 
       // Keep reference to click handler to unbind it.
