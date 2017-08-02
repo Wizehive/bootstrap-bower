@@ -3555,9 +3555,9 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
       //SUPPORTED ATTRIBUTES (OPTIONS)
 
       //minimal no of characters that needs to be entered before typeahead kicks-in
-      var minSearch = originalScope.$eval(attrs.typeaheadMinLength);
-      if (!minSearch && minSearch !== 0) {
-        minSearch = 1;
+      var minLength = originalScope.$eval(attrs.typeaheadMinLength);
+      if (!minLength && minLength !== 0) {
+        minLength = 1;
       }
 
       //minimal wait time after last character typed before typehead kicks-in
@@ -3710,7 +3710,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
 
         hasFocus = true;
 
-        if (inputValue && inputValue.length >= minSearch) {
+        if (minLength === 0 || inputValue && inputValue.length >= minLength) {
           if (waitTime > 0) {
             cancelPreviousTimeout();
             scheduleSearchWithTimeout(inputValue);
@@ -3825,7 +3825,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
 
       element.bind('focus', function (evt) {
         hasFocus = true;
-        if (minSearch === 0 && !modelCtrl.$viewValue) {
+        if (minLength === 0 && !modelCtrl.$viewValue) {
           $timeout(function() {
             getMatchesAsync(modelCtrl.$viewValue, evt);
           }, 0);
