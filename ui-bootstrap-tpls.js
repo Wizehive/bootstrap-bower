@@ -3921,6 +3921,19 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
     return function(matchItem, query) {
       return query ? ('' + matchItem).replace(new RegExp(escapeRegexp(query), 'gi'), '<strong>$&</strong>') : matchItem;
     };
+  })
+  .filter('typeaheadEscapeHtmlTags',function(){
+  	var entityMap = {
+		"<": "&lt;",
+		">": "&gt;",
+		"/": '&#x2F;'
+	};
+
+	return function(str) {
+		return String(str).replace(/[<>\/]/g, function (s) {
+			return entityMap[s];
+		});
+	};
   });
 
 angular.module("template/accordion/accordion-group.html", []).run(["$templateCache", function($templateCache) {
@@ -4223,7 +4236,7 @@ angular.module("template/timepicker/timepicker.html", []).run(["$templateCache",
 
 angular.module("template/typeahead/typeahead-match.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/typeahead/typeahead-match.html",
-    "<a tabindex=\"-1\" bind-html-unsafe=\"match.label | typeaheadHighlight:query\"></a>");
+    "<a tabindex=\"-1\" ng-bind-html=\"match.label | typeaheadEscapeHtmlTags | typeaheadHighlight:query\"></a>");
 }]);
 
 angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCache", function($templateCache) {
