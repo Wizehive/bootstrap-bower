@@ -3941,7 +3941,8 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
 				.replace(/\&l\<strong\>t\<\/strong\>\;/g, '&lt;')
 				.replace(/\&g\<strong\>t\<\/strong\>\;/g, '&gt;')
 				.replace(/\&\<strong\>l\<\/strong\>t\;/g, '&lt;')
-				.replace(/\&\<strong\>g\<\/strong\>t\;/g, '&gt;');
+				.replace(/\&\<strong\>g\<\/strong\>t\;/g, '&gt;')
+				.replace(/\&\#x2\<strong\>F\<\/strong\>\;/g, '&#x2F;');
 		};
   });
 
