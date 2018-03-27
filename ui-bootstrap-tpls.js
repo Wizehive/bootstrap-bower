@@ -3937,7 +3937,11 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
   })
   .filter('typeaheadFixHighlightedHtml',function(){
 		return function(str) {
-			return String(str).replace(/\&l\<strong\>t\<\/strong>\;/g, '&lt;').replace(/\&g\<strong\>t\<\/strong>\;/g, '&gt;');
+			return String(str)
+				.replace(/\&l\<strong\>t\<\/strong\>\;/g, '&lt;')
+				.replace(/\&g\<strong\>t\<\/strong\>\;/g, '&gt;')
+				.replace(/\&\<strong\>l\<\/strong\>t\;/g, '&lt;')
+				.replace(/\&\<strong\>g\<\/strong\>t\;/g, '&gt;');
 		};
   });
 
