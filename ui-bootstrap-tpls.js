@@ -3938,8 +3938,33 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
   .filter('typeaheadFixHighlightedHtml',function(){
 		return function(str) {
 			return String(str)
-				.replace(/\&(l|g|\#|\#x|\#x2|\#){0,1}<strong>([lgt\#x2F])<\/strong>([t\#x2F;]{1,4})/g, '\&$1$2$3')
+				.replace(/\&<strong>(l|g)<\/strong>t\;/g, '\&$1t;')
+				.replace(/\&<strong>(lt|gt|#x2F)<\/strong>\;/g, '\&$1;')
+				.replace(/\&<strong>(lt\;|gt\;|\#x2F\;)<\/strong>/g, '\&$1')
+				.replace(/\&(l|g)<strong>t<\/strong>\;/g, '\&$1t;')
+				.replace(/\&(lt|gt|\#x2F)<strong>\;<\/strong>/g, '\&$1;')
 				.replace(/<strong>\&<\/strong>(lt\;|gt\;|\#x2F\;)/g, '\&$1')
+				.replace(/<strong>\&(l|g)<\/strong>t\;/g, '\&$1t;')
+				.replace(/<strong>\&(lt|gt|#x2F)<\/strong>\;/g, '\&$1;')
+				.replace(/<strong>\&(lt\;|gt\;|#x2F\;)<\/strong>/g, '\&$1')
+				.replace(/<strong>\&\#<\/strong>x2F\;/g, '\&#x2F;')
+				.replace(/<strong>\&\#x<\/strong>2F\;/g, '\&#x2F;')
+				.replace(/<strong>\&\#x2<\/strong>F\;/g, '\&#x2F;')
+				.replace(/<strong>\&\#x2F<\/strong>\;/g, '\&#x2F;')
+				.replace(/\&<strong>\#<\/strong>x2F\;/g, '\&#x2F;')
+				.replace(/\&<strong>\#x<\/strong>2F\;/g, '\&#x2F;')
+				.replace(/\&<strong>\#x2<\/strong>F\;/g, '\&#x2F;')
+				.replace(/\&<strong>\#x2F<\/strong>\;/g, '\&#x2F;')
+				.replace(/\&<strong>\#x2F\;<\/strong>/g, '\&#x2F;')
+				.replace(/\&\#<strong>x<\/strong>2F\;/g, '\&#x2F;')
+				.replace(/\&\#<strong>x2<\/strong>F\;/g, '\&#x2F;')
+				.replace(/\&\#<strong>x2F<\/strong>\;/g, '\&#x2F;')
+				.replace(/\&\#<strong>x2F\;<\/strong>/g, '\&#x2F;')
+				.replace(/\&\#x<strong>2<\/strong>F\;/g, '\&#x2F;')
+				.replace(/\&\#x<strong>2F<\/strong>\;/g, '\&#x2F;')
+				.replace(/\&\#x<strong>2F\;<\/strong>/g, '\&#x2F;')
+				.replace(/\&\#x2<strong>F<\/strong>\;/g, '\&#x2F;')
+				.replace(/\&\#x2<strong>F\;<\/strong>/g, '\&#x2F;');
 		};
   });
 
